@@ -150,6 +150,7 @@
 
     .ascii-art {
         font-family: monospace;
+        flex-wrap: wrap;
         font-size: 0.8rem;
         color: var(--text-primary);
         margin: 2rem 0;
@@ -183,8 +184,6 @@
         transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
-    }
-
     .nav-links a::before {
         content: '';
         position: absolute;
@@ -384,6 +383,14 @@
         .socials .social-links {
             gap: 1rem;
         }
+    
+    @font-face {
+            font-family: 'demo-cyber';
+            src: url('demo-cyber-glitch.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+}
+    
     }
 
     /* Typewriter effect */
@@ -420,12 +427,12 @@
         
         <p class="ascii-art">
     
-    ___ _                             _         ___              _             
+    <!-- ___ _                             _         ___              _             
    /   (_)_   ___   _  __ _ _ __  ___| |__     / _ \_   _ _ __  (_) __ _ _ __  
   / /\ / \ \ / / | | |/ _` | '_ \/ __| '_ \   / /_\/ | | | '_ \ | |/ _` | '_ \ 
  / /_//| |\ V /| |_| | (_| | | | \__ \ | | | / /_\\| |_| | | | || | (_| | | | |
 /___,' |_| \_/  \__, |\__,_|_| |_|___/_| |_| \____/ \__,_|_| |_|/ |\__,_|_| |_|
-                |___/                                         |__/             
+                |___/                                         |__/              -->
 
 <!-- 
 ██████╗ ██╗██╗   ██╗██╗   ██╗ █████╗ ███╗   ██╗███████╗██╗  ██╗     ██████╗ ██╗   ██╗███╗   ██╗     ██╗ █████╗ ███╗   ██╗
@@ -434,6 +441,10 @@
 ██║  ██║██║╚██╗ ██╔╝  ╚██╔╝  ██╔══██║██║╚██╗██║╚════██║██╔══██║    ██║   ██║██║   ██║██║╚██╗██║██   ██║██╔══██║██║╚██╗██║
 ██████╔╝██║ ╚████╔╝    ██║   ██║  ██║██║ ╚████║███████║██║  ██║    ╚██████╔╝╚██████╔╝██║ ╚████║╚█████╔╝██║  ██║██║ ╚████║
 ╚═════╝ ╚═╝  ╚═══╝     ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝     ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝ ╚════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝ -->
+
+<link rel="font-family" href="D:\programming\mysiteHTML\demo-cyber-glitch.ttf">
+
+<h1 class="ascii-art" style="font-size: 72px; font-weight: 900; font-family:demo-cyber">DIVYANSH GUNJAN</divyansh></h1>
             </p>
 
         <nav class="nav-links">
