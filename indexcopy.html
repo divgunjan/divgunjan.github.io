@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon_nobg.ico" type="image/x-icon">
+    <title>divyansh gunjan</title>
+</head>
+
+<style>
+    /* Custom font loading - using a web font as fallback since local font may not load */
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+    
+    @font-face {
+        font-family: 'demo-cyber';
+        src: url('demo-cyber-glitch.ttf') format('truetype');
+        font-weight: bold;
+        font-style: normal;
+        font-display: swap; /* This ensures consistent rendering */
+    }
+
+    @font-face {
+        font-family: 'hacker';
+        src:url('Hacked-KerX.ttf') format('trutype');
+        font-weight: bold;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    :root {
+        /* Dark mode variables (default) */
+        --bg-primary: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 100%);
+        --bg-section: rgba(0, 255, 65, 0.05);
+        --text-primary: #00ff41;
+        --text-secondary: #ff6b35;
+        --border-color: #00ff41;
+        --accent-color: #ff6b35;
+        --hover-bg: rgba(255, 107, 53, 0.1);
+        --project-bg: rgba(255, 107, 53, 0.1);
+        --project-hover: rgba(255, 107, 53, 0.2);
+        --scanlines: rgba(0, 255, 65, 0.03);
+        --shadow-primary: #00ff41;
+        --shadow-secondary: #ff6b35;
+    }
+
+    [data-theme="light"] {
+        /* Light mode variables */
+        --bg-primary: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%);
+        --bg-section: rgba(0, 100, 0, 0.05);
+        --text-primary: #1a1a1a;
+        --text-secondary: #cc5500;
+        --border-color: #006400;
+        --accent-color: #cc5500;
+        --hover-bg: rgba(204, 85, 0, 0.1);
+        --project-bg: rgba(204, 85, 0, 0.08);
+        --project-hover: rgba(204, 85, 0, 0.15);
+        --scanlines: rgba(0, 100, 0, 0.02);
+        --shadow-primary: #006400;
+        --shadow-secondary: #cc5500;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Courier New', monospace;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        line-height: 1.6;
+        min-height: 100vh;
+        padding: 2rem;
+        position: relative;
+        overflow-x: hidden;
+        transition: all 0.5s ease;
+    }
+
+    /* Retro CRT effect */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            var(--scanlines) 2px,
+            var(--scanlines) 4px
+        );
+        pointer-events: none;
+        z-index: 1000;
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle {
+        position: fixed;
+        top: 2rem;
+        right: 2rem;
+        z-index: 1001;
+        width: 60px;
+        height: 30px;
+        background: var(--border-color);
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        padding: 2px;
+        box-shadow: 0 0 10px var(--shadow-primary);
+    }
+
+    .theme-toggle:hover {
+        box-shadow: 0 0 20px var(--shadow-primary);
+        transform: scale(1.05);
+    }
+
+    .theme-toggle-slider {
+        width: 24px;
+        height: 24px;
+        background: var(--bg-primary);
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        transform: translateX(0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        box-shadow: inset 0 0 10px var(--shadow-primary);
+    }
+
+    [data-theme="light"] .theme-toggle-slider {
+        transform: translateX(28px);
+    }
+
+    .theme-icon {
+        transition: all 0.3s ease;
+        filter: drop-shadow(0 0 5px var(--shadow-primary));
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+        padding-top: 3rem; /* Add padding to prevent overlap with date */
+    }
+
+    .date {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        font-weight: bold;
+        text-shadow: 0 0 10px var(--shadow-secondary);
+        animation: pulse 2s infinite;
+        z-index: 10; /* Ensure it stays above other elements */
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+
+    .ascii-art {
+        font-family: monospace;
+        flex-wrap: wrap;
+        font-size: 0.8rem;
+        color: var(--text-primary);
+        margin: 2rem 0;
+        text-align: center;
+        white-space: pre;
+        text-shadow: 0 0 10px var(--shadow-primary);
+        animation: glow 3s ease-in-out infinite alternate;
+        transition: all 0.5s ease;
+    }
+
+    /* Fixed name styling with consistent font across all screen sizes */
+    .main-name {
+        /* font-family: 'hacker', 'demo-cyber', 'Orbitron', 'Courier New', monospace !important; */
+        font-family: 'demo-cyber';
+        font-size: clamp(24px, 8vw, 72px) !important; /* Responsive but consistent */
+        font-weight: 900 !important;
+        color: var(--text-primary) !important;
+        margin: 2rem 0 !important; /* Reset to original margin */
+        text-align: center !important;
+        text-shadow: 0 0 10px var(--shadow-primary) !important;
+        animation: glow 3s ease-in-out infinite alternate !important;
+        transition: all 0.5s ease !important;
+        letter-spacing: 2px !important;
+        line-height: 1.2 !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+    }
+
+    @keyframes glow {
+        from { text-shadow: 0 0 10px var(--shadow-primary), 0 0 20px var(--shadow-primary); }
+        to { text-shadow: 0 0 15px var(--shadow-primary), 0 0 30px var(--shadow-primary), 0 0 40px var(--shadow-primary); }
+    }
+
+    .nav-links {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+    }
+
+    .nav-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: bold;
+        padding: 0.5rem 1rem;
+        border: 2px solid var(--text-secondary);
+        background: transparent;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-links a::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, var(--hover-bg), transparent);
+        transition: left 0.5s;
+    }
+
+    .nav-links a:hover::before {
+        left: 100%;
+    }
+
+    .nav-links a:hover {
+        background: var(--hover-bg);
+        box-shadow: 0 0 20px var(--shadow-secondary);
+        transform: translateY(-2px);
+    }
+
+    .section {
+        margin: 3rem 0;
+        padding: 2rem;
+        background: var(--bg-section);
+        border: 1px solid var(--border-color);
+        border-radius: 0;
+        position: relative;
+        backdrop-filter: blur(10px);
+        transition: all 0.5s ease;
+    }
+
+    .section::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, var(--border-color), var(--text-secondary), var(--border-color));
+        border-radius: 0;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .section:hover::before {
+        opacity: 0.3;
+    }
+
+    .section h2 {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px var(--shadow-secondary);
+        transition: all 0.5s ease;
+    }
+
+    .intro {
+        font-size: 1.1rem;
+    }
+
+    .intro .name {
+        color: var(--text-secondary);
+        font-weight: bold;
+        font-size: 1.3rem;
+        text-shadow: 0 0 15px var(--shadow-secondary);
+        transition: all 0.5s ease;
+    }
+
+    .highlight {
+        color: var(--text-secondary);
+        font-weight: bold;
+        text-shadow: 0 0 5px var(--shadow-secondary);
+        transition: all 0.5s ease;
+    }
+
+    .projects ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .projects li {
+        margin: 1rem 0;
+        padding: 1rem;
+        background: var(--project-bg);
+        border-left: 4px solid var(--text-secondary);
+        transition: all 0.3s ease;
+    }
+
+    .projects li:hover {
+        background: var(--project-hover);
+        transform: translateX(10px);
+        box-shadow: 0 5px 15px var(--hover-bg);
+    }
+
+    .projects a, .socials a {
+        color: var(--text-primary);
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .projects a:hover, .socials a:hover {
+        color: var(--text-secondary);
+        text-shadow: 0 0 10px var(--shadow-secondary);
+    }
+
+    .socials {
+        text-align: center;
+    }
+
+    .socials .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+    }
+
+    .socials .social-links a {
+        padding: 0.8rem 1.5rem;
+        border: 2px solid var(--border-color);
+        background: transparent;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .socials .social-links a::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, var(--bg-section), transparent);
+        transition: left 0.5s;
+    }
+
+    .socials .social-links a:hover::before {
+        left: 100%;
+    }
+
+    .socials .social-links a:hover {
+        background: var(--bg-section);
+        box-shadow: 0 0 20px var(--shadow-primary);
+        transform: scale(1.05);
+    }
+
+    .terminal-cursor {
+        animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+        0%, 50% { opacity: 1; }
+        51%, 100% { opacity: 0; }
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        body {
+            padding: 1rem;
+        }
+        
+        .container {
+            padding-top: 2.5rem; /* Slightly less padding on mobile */
+        }
+        
+        .theme-toggle {
+            top: 1rem;
+            right: 1rem;
+            width: 50px;
+            height: 25px;
+        }
+        
+        .theme-toggle-slider {
+            width: 20px;
+            height: 20px;
+            font-size: 10px;
+        }
+        
+        [data-theme="light"] .theme-toggle-slider {
+            transform: translateX(23px);
+        }
+        
+        .ascii-art {
+            font-size: 0.6rem;
+        }
+        
+        /* Ensure main name stays consistent on mobile */
+        .main-name {
+            font-size: clamp(20px, 10vw, 48px) !important;
+            letter-spacing: 1px !important;
+        }
+        
+        .nav-links {
+            gap: 1rem;
+        }
+        
+        .section {
+            padding: 1.5rem;
+        }
+        
+        .socials .social-links {
+            gap: 1rem;
+        }
+    }
+
+    /* Extra small screens */
+    @media (max-width: 480px) {
+        .container {
+            padding-top: 2rem; /* Even less padding on very small screens */
+        }
+        
+        .main-name {
+            font-size: clamp(18px, 12vw, 36px) !important;
+            letter-spacing: 0.5px !important;
+        }
+        
+        .date {
+            font-size: 0.8rem; /* Slightly smaller date on very small screens */
+        }
+    }
+
+    /* Typewriter effect */
+    .typewriter {
+        overflow: hidden;
+        border-right: 0.15em solid var(--text-primary);
+        white-space: nowrap;
+        margin: 0 auto;
+        letter-spacing: 0.15em;
+        animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+        from { width: 0; }
+        to { width: 100%; }
+    }
+
+    @keyframes blink-caret {
+        from, to { border-color: transparent; }
+        50% { border-color: var(--text-primary); }
+    }
+</style>
+
+<body>
+    <!-- Theme Toggle Button -->
+    <div class="theme-toggle" onclick="toggleTheme()">
+        <div class="theme-toggle-slider">
+            <span class="theme-icon">🌙</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="date">Last Updated: July 29, 2025</div>
+        
+        <!-- Fixed main name with consistent styling -->
+        <h1 class="main-name">DIVYANSH GUNJAN</h1>
+
+        <nav class="nav-links">
+            <a href="https://www.goodreads.com/user/show/169801773-divyansh" onclick="" target="_blank">goodreads</a>
+            <a href="https://open.spotify.com/show/7xB04oc0PX9A485OUX7sUC?si=402bd33cbced4b1a&nd=1&dlsi=cc42a27d73c449d8" onclick="" target="_blank">spotify</a>
+            <a href="https://divgunjan.github.io/mementomori.html" target="_blank">memento mori</a>
+            <a href="https://tih.bearblog.dev/" target="_blank">i write</a>
+        </nav>
+
+        <section class="section intro">
+            <h2>> About_Me.txt</h2>
+            <p>Hi, I'm <span class="name">Divyansh</span><span class="terminal-cursor">_</span></p>
+            <p><br>
+                I write code(learning to) and part my time between programming, college and socializing. I grew up in <span class="highlight">Patna, India</span> and grew my interest in public speaking, literature and language at an early age.
+            </p>
+            <p>
+                With my soft skills as a prerequisite, I plan to strengthen my toolkit with my hard skills. I got into <span class="highlight">machine learning</span> when I was 15. Programming was never my calling, but now it plans to be the back bone of my novice career. It was the coronavirus lockdown and I had tons of free time on me.
+            </p>
+        </section>
+
+        <section class="section theme">
+            <h2>> Interests.exe</h2>
+            <p><span class="highlight">More so, I like to write.</span> I have been writing articles, blogs and mini essays on various topics that interest me.</p><br>
+            <p><strong>What interests do I have?</strong> I paint, write (as I said), play the guitar, programming (because it is a vibe) and lift from time to time.</p>
+            <p>
+                I spent 2022-23 building projects, participating in cohorts, clubs and started my own podcast. I interned at 3 companies. Twice as a graphic designer and once as a mechanical design intern on static rocket test pads.
+            </p>
+            <p>
+                I guess, it might be clear that I am a <a href="#" onclick="showMessage('Multipotentialite - someone with many interests and creative pursuits!')">multipotentialite</a> by now, and so I consider throwing hands at many things to experience and see what works. I feared test-taking and so I took the JEE, and did not do well.
+            </p>
+            <p><br>
+                It matured me, made me more patient and sort of humbled me. Now I try finding balance in life. And I like to play video games as well btw(nothing wrong with that ig).
+            </p>
+        </section>
+
+        <section class="section projects">
+            <h2>> My_Work.dir</h2>
+            <ul>
+                <li>
+                    <strong><a target = "_blank" href="https://open.spotify.com/show/7xB04oc0PX9A485OUX7sUC?si=402bd33cbced4b1a&nd=1&dlsi=cc42a27d73c449d8" onclick="">The Whimper Podcast</a></strong><br>
+                    A space science podcast with <span class = "highlight">3500+</span> downloads across platforms.
+                </li>
+                <li>
+                    <strong><a href="https://github.com/divgunjan" target ="_blank" onclick="showMessage('GitHub portfolio loading...')">GitHub</a></strong><br>
+                    Collection of my coding projects and experiments.
+                </li>
+            </ul>
+        </section>
+
+        <section class="section socials">
+            <h2>> Connect.bat</h2>
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/divyanshgunjan/" onclick="showMessage('Visiting LinkedIn profile!')" target="_blank">linkedin</a>
+                <a href="mailto:divyanshconvinces@gmail.com" onclick="showMessage('Email: divyanshconvinces@gmail.com')">e-mail</a>
+                <a href="https://x.com/div_gunjan" onclick="showMessage('X.com @div_gunjan')" target="_blank">𝕏</a>
+            </div>
+        </section>
+    </div>
+
+       <div class = "name" style="font-size:14px; align-items: center; text-align: center">
+            © 2025 divgunjan.github.io. All rights reserved.
+        </div>
+    
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const themeIcon = document.querySelector('.theme-icon');
+            
+            if (currentTheme === 'light') {
+                body.removeAttribute('data-theme');
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Load saved theme on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeIcon = document.querySelector('.theme-icon');
+            
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '☀️';
+            } else {
+                themeIcon.textContent = '🌙';
+            }
+        });
+
+        function showMessage(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--text-primary);
+                color: var(--bg-primary);
+                padding: 1rem 2rem;
+                border-radius: 5px;
+                font-family: 'Courier New', monospace;
+                font-weight: bold;
+                z-index: 10000;
+                box-shadow: 0 5px 15px var(--shadow-primary);
+                transform: translateX(300px);
+                transition: transform 0.3s ease;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateX(300px)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 300);
+        }
+
+        // Add some interactive terminal effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.section');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'slideInLeft 0.6s ease-out';
+                    }
+                });
+            });
+            
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+
+        // CSS for slide animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInLeft {
+                from {
+                    opacity: 0;
+                    transform: translateX(-50px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>
